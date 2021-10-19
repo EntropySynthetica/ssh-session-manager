@@ -1,0 +1,22 @@
+{
+  "hosts": [
+    {
+        "name": "RaspberryPi",
+        "ip": "192.168.1.1",
+        "user": "erica",
+        "group": ""
+    },
+    {
+        "name": "KubeNode01",
+        "ip": "192.168.1.2",
+        "user": "erica",
+        "group": ""
+    },
+    {
+        "name": "KubeNode02",
+        "ip": "192.168.1.3",
+        "user": "erica",
+        "group": ""
+    }
+  ]
+}
