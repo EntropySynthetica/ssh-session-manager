@@ -53,7 +53,7 @@ func main() {
 	survey.AskOne(prompt, &selectDevice, survey.WithPageSize(10))
 
 	// Run SSH and pass it the hostname of the device to connect to.
-	fmt.Println("Connecting to " + host.Hosts[selectDevice].Name)
+	fmt.Println("Connecting to " + host.Hosts[selectDevice].Name + " - " + host.Hosts[selectDevice].Ip)
 	sshArgs := "ssh " + host.Hosts[selectDevice].User + "@" + host.Hosts[selectDevice].Ip
 	cmd := exec.Command("bash", "-c", sshArgs)
 	cmd.Stdin = os.Stdin
