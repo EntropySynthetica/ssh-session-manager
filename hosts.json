@@ -1,22 +1,35 @@
 {
-  "hosts": [
-    {
+  "hosts": {
+
+    "default": [
+      {
         "name": "RaspberryPi",
         "ip": "192.168.1.1",
-        "user": "erica",
-        "group": ""
-    },
-    {
-        "name": "KubeNode01",
+        "user": "erica"
+      },
+      {
+        "name": "debian",
         "ip": "192.168.1.2",
-        "user": "erica",
-        "group": ""
-    },
-    {
+        "user": "erica"
+      }
+    ],
+
+    "kubernetes": [
+      {
+        "name": "KubeNode01",
+        "ip": "192.168.1.11",
+        "user": "erica"
+      },
+      {
         "name": "KubeNode02",
-        "ip": "192.168.1.3",
-        "user": "erica",
-        "group": ""
-    }
-  ]
+        "ip": "192.168.1.12",
+        "user": "erica"
+      },
+      {
+        "name": "KubeNode03",
+        "ip": "192.168.1.13",
+        "user": "erica"
+      }
+    ]
+  }
 }
