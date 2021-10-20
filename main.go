@@ -8,17 +8,13 @@ import (
 	"os/exec"
 
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/mitchellh/mapstructure"
 )
 
-type Hosts struct {
-	Hosts []Host `json:"hosts"`
-}
-
 type Host struct {
-	Name  string `json:"name"`
-	Ip    string `json:"ip"`
-	User  string `json:"user"`
-	Group string `json:"group"`
+	Name string `json:"name"`
+	Ip   string `json:"ip"`
+	User string `json:"user"`
 }
 
 func main() {
@@ -35,26 +31,36 @@ func main() {
 	// Unmarshal the JSON from the file
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 
-	var host Hosts
-	json.Unmarshal(byteValue, &host)
+	var jsonResults map[string]interface{}
+	json.Unmarshal(byteValue, &jsonResults)
 
-	// Create emtpy array and dump the IPs into it.
-	devices := []string{}
-	for i := 0; i < len(host.Hosts); i++ {
-		devices = append(devices, host.Hosts[i].Name)
+	// Create emtpy arrays and dump the host into it.
+	deviceNames := []string{}
+	hostNames := []string{}
+	users := []string{}
+
+	// Itterate thru the JSON data and store a list of devices, hostsnames and users to the appove arrays
+	for _, group := range jsonResults["hosts"].(map[string]interface{}) {
+		for _, hosts := range group.([]interface{}) {
+			var host Host
+			mapstructure.Decode(hosts, &host)
+			deviceNames = append(deviceNames, host.Name)
+			hostNames = append(hostNames, host.Ip)
+			users = append(users, host.User)
+		}
 	}
 
 	// Bring up the menu for the user to select the device to connect to.
 	var selectDevice int
 	prompt := &survey.Select{
 		Message: "Select a device to connect to:",
-		Options: devices,
+		Options: deviceNames,
 	}
 	survey.AskOne(prompt, &selectDevice, survey.WithPageSize(10))
 
 	// Run SSH and pass it the hostname of the device to connect to.
-	fmt.Println("Connecting to " + host.Hosts[selectDevice].Name + " - " + host.Hosts[selectDevice].Ip)
-	sshArgs := "ssh " + host.Hosts[selectDevice].User + "@" + host.Hosts[selectDevice].Ip
+	fmt.Println("Connecting to " + deviceNames[selectDevice] + " - " + hostNames[selectDevice] + " as " + users[selectDevice])
+	sshArgs := "ssh " + users[selectDevice] + "@" + hostNames[selectDevice]
 	cmd := exec.Command("bash", "-c", sshArgs)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
