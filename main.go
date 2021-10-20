@@ -20,7 +20,8 @@ type Host struct {
 func main() {
 
 	// Open the hosts file
-	jsonFile, err := os.Open("hosts.json")
+	homedir, _ := os.UserHomeDir()
+	jsonFile, err := os.Open(homedir + "/.config/ssm/hosts.json")
 
 	if err != nil {
 		fmt.Println(err)
