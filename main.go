@@ -39,15 +39,42 @@ func main() {
 	deviceNames := []string{}
 	hostNames := []string{}
 	users := []string{}
+	groups := []string{}
 
-	// Itterate thru the JSON data and store a list of devices, hostsnames and users to the appove arrays
-	for _, group := range jsonResults["hosts"].(map[string]interface{}) {
-		for _, hosts := range group.([]interface{}) {
-			var host Host
-			mapstructure.Decode(hosts, &host)
-			deviceNames = append(deviceNames, host.Name)
-			hostNames = append(hostNames, host.Ip)
-			users = append(users, host.User)
+	// Itterate thru the JSON and add host group names to an array.
+	groups = append(groups, "All")
+	for key, _ := range jsonResults["hosts"].(map[string]interface{}) {
+		groups = append(groups, key)
+	}
+
+	// Bring up the menu for the user to select the group to filter to.
+	var selectGroup string
+	groupPrompt := &survey.Select{
+		Message: "Select a Device Group:",
+		Options: groups,
+	}
+	survey.AskOne(groupPrompt, &selectGroup, survey.WithPageSize(10))
+
+	// Itterate thru the JSON data and store a list of devices, hostsnames and users to arrays
+	for key, group := range jsonResults["hosts"].(map[string]interface{}) {
+		// If the group is All then we want to match on every pass.
+		if selectGroup == "All" {
+			for _, hosts := range group.([]interface{}) {
+				var host Host
+				mapstructure.Decode(hosts, &host)
+				deviceNames = append(deviceNames, host.Name)
+				hostNames = append(hostNames, host.Ip)
+				users = append(users, host.User)
+			}
+			// Otherwise only add hosts from the selected group.
+		} else if selectGroup == key {
+			for _, hosts := range group.([]interface{}) {
+				var host Host
+				mapstructure.Decode(hosts, &host)
+				deviceNames = append(deviceNames, host.Name)
+				hostNames = append(hostNames, host.Ip)
+				users = append(users, host.User)
+			}
 		}
 	}
 
