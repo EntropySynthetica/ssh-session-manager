@@ -43,7 +43,7 @@ func main() {
 
 	// Itterate thru the JSON and add host group names to an array.
 	groups = append(groups, "All")
-	for key, _ := range jsonResults["hosts"].(map[string]interface{}) {
+	for key := range jsonResults["hosts"].(map[string]interface{}) {
 		groups = append(groups, key)
 	}
 
