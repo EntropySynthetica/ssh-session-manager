@@ -12,9 +12,9 @@ import (
 )
 
 type Host struct {
-	Name string `json:"name"`
-	Ip   string `json:"ip"`
-	User string `json:"user"`
+	Name     string `json:"name"`
+	Hostname string `json:"hostname"`
+	User     string `json:"user"`
 }
 
 func main() {
@@ -63,7 +63,7 @@ func main() {
 				var host Host
 				mapstructure.Decode(hosts, &host)
 				deviceNames = append(deviceNames, host.Name)
-				hostNames = append(hostNames, host.Ip)
+				hostNames = append(hostNames, host.Hostname)
 				users = append(users, host.User)
 			}
 			// Otherwise only add hosts from the selected group.
@@ -72,7 +72,7 @@ func main() {
 				var host Host
 				mapstructure.Decode(hosts, &host)
 				deviceNames = append(deviceNames, host.Name)
-				hostNames = append(hostNames, host.Ip)
+				hostNames = append(hostNames, host.Hostname)
 				users = append(users, host.User)
 			}
 		}
