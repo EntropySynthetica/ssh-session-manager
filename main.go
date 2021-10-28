@@ -25,6 +25,7 @@ func main() {
 
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 
 	defer jsonFile.Close()
@@ -33,7 +34,12 @@ func main() {
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 
 	var jsonResults map[string]interface{}
-	json.Unmarshal(byteValue, &jsonResults)
+	err = json.Unmarshal(byteValue, &jsonResults)
+
+	if err != nil {
+		fmt.Println("Error reading hosts.json ", err)
+		return
+	}
 
 	// Create emtpy arrays and dump the host into it.
 	deviceNames := []string{}
