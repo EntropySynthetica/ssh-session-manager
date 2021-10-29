@@ -49,6 +49,12 @@ func main() {
 
 	// Itterate thru the JSON and add host group names to an array.
 	groups = append(groups, "All")
+
+	if jsonResults["hosts"] == nil {
+		fmt.Println("Error, no host groups found in hosts.json")
+		return
+	}
+
 	for key := range jsonResults["hosts"].(map[string]interface{}) {
 		groups = append(groups, key)
 	}
