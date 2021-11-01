@@ -32,11 +32,10 @@ func main() {
 	homedir, _ := os.UserHomeDir()
 	var configFile string
 
+	// Parse Command Line Flags
 	newFile := flag.Bool("new", false, "Create a new hosts file")
 	flag.StringVar(&configFile, "c", homedir+"/.config/ssm/hosts.json", "specify path of config file")
 	flag.Parse()
-
-	fmt.Println(configFile)
 
 	if *newFile {
 		fmt.Println("New File Placeholder")
