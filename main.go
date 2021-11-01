@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -17,11 +18,33 @@ type Host struct {
 	User     string `json:"user"`
 }
 
+type JsonFile struct {
+	Hosts struct {
+		Default []struct {
+			Name     string `json:"name"`
+			Hostname string `json:"hostname"`
+			User     string `json:"user"`
+		} `json:"default"`
+	} `json:"hosts"`
+}
+
 func main() {
+	homedir, _ := os.UserHomeDir()
+	var configFile string
+
+	newFile := flag.Bool("new", false, "Create a new hosts file")
+	flag.StringVar(&configFile, "c", homedir+"/.config/ssm/hosts.json", "specify path of config file")
+	flag.Parse()
+
+	fmt.Println(configFile)
+
+	if *newFile {
+		fmt.Println("New File Placeholder")
+		return
+	}
 
 	// Open the hosts file
-	homedir, _ := os.UserHomeDir()
-	jsonFile, err := os.Open(homedir + "/.config/ssm/hosts.json")
+	jsonFile, err := os.Open(configFile)
 
 	if err != nil {
 		fmt.Println(err)
