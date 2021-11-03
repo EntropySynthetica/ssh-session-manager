@@ -28,6 +28,12 @@ type JsonFile struct {
 	} `json:"hosts"`
 }
 
+type Hosts struct {
+	Hosts struct {
+		Default Host `json:"Default"`
+	} `json:"hosts"`
+}
+
 func main() {
 	homedir, _ := os.UserHomeDir()
 	var configFile string
@@ -39,6 +45,22 @@ func main() {
 
 	if *newFile {
 		fmt.Println("New File Placeholder")
+
+		host := Host{}
+		host.Name = "localhost"
+		host.Hostname = "127.0.0.1"
+		host.User = "Username"
+
+		jsonFile := Hosts{}
+		jsonFile.Hosts.Default = host
+
+		// jsonFile := Host{}
+		// jsonFile.Name = "localhost"
+		// jsonFile.Hostname = "127.0.0.1"
+		// jsonFile.User = "username"
+
+		file, _ := json.MarshalIndent(jsonFile, "", " ")
+		_ = ioutil.WriteFile(configFile, file, 0644)
 		return
 	}
 
