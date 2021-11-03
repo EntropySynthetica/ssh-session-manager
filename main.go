@@ -20,7 +20,8 @@ type Host struct {
 
 type Hosts struct {
 	Hosts struct {
-		Default []Host `json:"default"`
+		Default      []Host `json:"default"`
+		Workstations []Host `json:"workstations"`
 	} `json:"hosts"`
 }
 
@@ -45,9 +46,15 @@ func main() {
 		host2.Hostname = "192.168.0.254"
 		host2.User = "admin"
 
+		host3 := Host{}
+		host3.Name = "Linux1"
+		host3.Hostname = "192.168.0.1"
+		host3.User = "admin"
+
 		jsonFile := Hosts{}
 		jsonFile.Hosts.Default = append(jsonFile.Hosts.Default, host1)
 		jsonFile.Hosts.Default = append(jsonFile.Hosts.Default, host2)
+		jsonFile.Hosts.Workstations = append(jsonFile.Hosts.Workstations, host3)
 
 		file, _ := json.MarshalIndent(jsonFile, "", " ")
 		_ = ioutil.WriteFile(configFile, file, 0644)
