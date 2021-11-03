@@ -18,21 +18,9 @@ type Host struct {
 	User     string `json:"user"`
 }
 
-type JsonFile struct {
-	Hosts struct {
-		Default []struct {
-			Name     string `json:"name"`
-			Hostname string `json:"hostname"`
-			User     string `json:"user"`
-		} `json:"default"`
-	} `json:"hosts"`
-}
-
 type Hosts struct {
 	Hosts struct {
-		Default []struct {
-			Host Host
-		} `json:"default"`
+		Default []Host `json:"default"`
 	} `json:"hosts"`
 }
 
@@ -57,7 +45,7 @@ func main() {
 		host2.Hostname = "192.168.0.254"
 		host2.User = "admin"
 
-		jsonFile := JsonFile{}
+		jsonFile := Hosts{}
 		jsonFile.Hosts.Default = append(jsonFile.Hosts.Default, host1)
 		jsonFile.Hosts.Default = append(jsonFile.Hosts.Default, host2)
 
