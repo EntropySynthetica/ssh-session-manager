@@ -47,13 +47,19 @@ func main() {
 
 	// If the new file flag is selected create a new hosts file.
 	if *newFile {
-		host := Host{}
-		host.Name = "localhost"
-		host.Hostname = "127.0.0.1"
-		host.User = "Username"
+		host1 := Host{}
+		host1.Name = "localhost"
+		host1.Hostname = "127.0.0.1"
+		host1.User = "Username"
+
+		host2 := Host{}
+		host2.Name = "Router"
+		host2.Hostname = "192.168.0.254"
+		host2.User = "admin"
 
 		jsonFile := JsonFile{}
-		jsonFile.Hosts.Default = append(jsonFile.Hosts.Default, host)
+		jsonFile.Hosts.Default = append(jsonFile.Hosts.Default, host1)
+		jsonFile.Hosts.Default = append(jsonFile.Hosts.Default, host2)
 
 		file, _ := json.MarshalIndent(jsonFile, "", " ")
 		_ = ioutil.WriteFile(configFile, file, 0644)
