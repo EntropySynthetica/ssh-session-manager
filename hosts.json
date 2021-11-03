@@ -4,12 +4,12 @@
     "default": [
       {
         "name": "RaspberryPi",
-        "ip": "192.168.1.1",
+        "hostname": "192.168.1.1",
         "user": "erica"
       },
       {
         "name": "debian",
-        "ip": "192.168.1.2",
+        "hostname": "192.168.1.2",
         "user": "erica"
       }
     ],
@@ -17,17 +17,17 @@
     "kubernetes": [
       {
         "name": "KubeNode01",
-        "ip": "192.168.1.11",
+        "hostname": "192.168.1.11",
         "user": "erica"
       },
       {
         "name": "KubeNode02",
-        "ip": "192.168.1.12",
+        "hostname": "192.168.1.12",
         "user": "erica"
       },
       {
         "name": "KubeNode03",
-        "ip": "192.168.1.13",
+        "hostname": "192.168.1.13",
         "user": "erica"
       }
     ]
