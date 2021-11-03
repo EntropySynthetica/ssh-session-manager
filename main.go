@@ -45,9 +45,8 @@ func main() {
 	flag.StringVar(&configFile, "c", homedir+"/.config/ssm/hosts.json", "specify path of config file")
 	flag.Parse()
 
+	// If the new file flag is selected create a new hosts file.
 	if *newFile {
-		fmt.Println("New File Placeholder")
-
 		host := Host{}
 		host.Name = "localhost"
 		host.Hostname = "127.0.0.1"
