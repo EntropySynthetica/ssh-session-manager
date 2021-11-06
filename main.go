@@ -18,11 +18,13 @@ type Host struct {
 	User     string `json:"user"`
 }
 
-type Hosts struct {
-	Hosts struct {
-		Default      []Host `json:"default"`
-		Workstations []Host `json:"workstations"`
-	} `json:"hosts"`
+type Groups struct {
+	Groupname string `json:"groupname"`
+	Hosts     []Host `json:"hosts"`
+}
+
+type Hostfile struct {
+	Groups []Groups `json:"groups"`
 }
 
 func main() {
@@ -51,10 +53,18 @@ func main() {
 		host3.Hostname = "192.168.0.1"
 		host3.User = "admin"
 
-		jsonFile := Hosts{}
-		jsonFile.Hosts.Default = append(jsonFile.Hosts.Default, host1)
-		jsonFile.Hosts.Default = append(jsonFile.Hosts.Default, host2)
-		jsonFile.Hosts.Workstations = append(jsonFile.Hosts.Workstations, host3)
+		group1 := Groups{}
+		group1.Groupname = "Default"
+		group1.Hosts = append(group1.Hosts, host1)
+		group1.Hosts = append(group1.Hosts, host2)
+
+		group2 := Groups{}
+		group2.Groupname = "Workstations"
+		group2.Hosts = append(group2.Hosts, host3)
+
+		jsonFile := Hostfile{}
+		jsonFile.Groups = append(jsonFile.Groups, group1)
+		jsonFile.Groups = append(jsonFile.Groups, group2)
 
 		file, _ := json.MarshalIndent(jsonFile, "", " ")
 		_ = ioutil.WriteFile(configFile, file, 0644)
