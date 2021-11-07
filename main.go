@@ -134,11 +134,13 @@ func main() {
 
 	jsonFile.Close()
 
+	// Runs if addgroup flag has something in it.
 	if addGroup != "" {
 		AddGroup(jsonResults, addGroup, configFile)
 		return
 	}
 
+	// Runs if deletegroup flag has somethign in it.
 	if delGroup != "" {
 		DeleteGroup(jsonResults, delGroup, configFile)
 		return
