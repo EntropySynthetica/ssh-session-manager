@@ -26,47 +26,90 @@ type Hostfile struct {
 	Groups []Groups `json:"groups"`
 }
 
+func NewFile(configFile string) {
+	host1 := Host{}
+	host1.Name = "localhost"
+	host1.Hostname = "127.0.0.1"
+	host1.User = "Username"
+
+	host2 := Host{}
+	host2.Name = "Router"
+	host2.Hostname = "192.168.0.254"
+	host2.User = "admin"
+
+	host3 := Host{}
+	host3.Name = "Linux1"
+	host3.Hostname = "192.168.0.1"
+	host3.User = "admin"
+
+	group1 := Groups{}
+	group1.Groupname = "Default"
+	group1.Hosts = append(group1.Hosts, host1)
+	group1.Hosts = append(group1.Hosts, host2)
+
+	group2 := Groups{}
+	group2.Groupname = "Workstations"
+	group2.Hosts = append(group2.Hosts, host3)
+
+	jsonFile := Hostfile{}
+	jsonFile.Groups = append(jsonFile.Groups, group1)
+	jsonFile.Groups = append(jsonFile.Groups, group2)
+
+	file, _ := json.MarshalIndent(jsonFile, "", " ")
+	_ = ioutil.WriteFile(configFile, file, 0644)
+}
+
+func AddGroup(jsonResults Hostfile, addGroup string, configFile string) {
+	var newGroup Groups
+	newGroup.Groupname = addGroup
+
+	jsonResults.Groups = append(jsonResults.Groups, newGroup)
+
+	file, _ := json.MarshalIndent(jsonResults, "", " ")
+	_ = ioutil.WriteFile(configFile, file, 0644)
+
+	fmt.Println("Adding new group: " + addGroup)
+	return
+}
+
+func DeleteGroup(jsonResults Hostfile, delGroup string, configFile string) {
+	var newJson Hostfile
+	var foundGroup = false
+
+	for i, group := range jsonResults.Groups {
+		if group.Groupname == delGroup {
+			foundGroup = true
+		} else {
+			newJson.Groups = append(newJson.Groups, jsonResults.Groups[i])
+		}
+	}
+
+	if *&foundGroup {
+		fmt.Println("Delete Group: " + delGroup)
+		file, _ := json.MarshalIndent(newJson, "", " ")
+		_ = ioutil.WriteFile(configFile, file, 0644)
+	} else {
+		fmt.Println("Error: Group " + delGroup + " was not found.")
+	}
+	return
+}
+
 func main() {
 	homedir, _ := os.UserHomeDir()
 	var configFile string
+	var addGroup string
+	var delGroup string
 
 	// Parse Command Line Flags
 	newFile := flag.Bool("new", false, "Create a new hosts file")
+	flag.StringVar(&addGroup, "addgroup", "", "Add a new Group to the hosts file")
+	flag.StringVar(&delGroup, "delgroup", "", "Delete a Group from the host file")
 	flag.StringVar(&configFile, "c", homedir+"/.config/ssm/hosts.json", "specify path of config file")
 	flag.Parse()
 
 	// If the new file flag is selected create a new hosts file.
 	if *newFile {
-		host1 := Host{}
-		host1.Name = "localhost"
-		host1.Hostname = "127.0.0.1"
-		host1.User = "Username"
-
-		host2 := Host{}
-		host2.Name = "Router"
-		host2.Hostname = "192.168.0.254"
-		host2.User = "admin"
-
-		host3 := Host{}
-		host3.Name = "Linux1"
-		host3.Hostname = "192.168.0.1"
-		host3.User = "admin"
-
-		group1 := Groups{}
-		group1.Groupname = "Default"
-		group1.Hosts = append(group1.Hosts, host1)
-		group1.Hosts = append(group1.Hosts, host2)
-
-		group2 := Groups{}
-		group2.Groupname = "Workstations"
-		group2.Hosts = append(group2.Hosts, host3)
-
-		jsonFile := Hostfile{}
-		jsonFile.Groups = append(jsonFile.Groups, group1)
-		jsonFile.Groups = append(jsonFile.Groups, group2)
-
-		file, _ := json.MarshalIndent(jsonFile, "", " ")
-		_ = ioutil.WriteFile(configFile, file, 0644)
+		NewFile(configFile)
 		return
 	}
 
@@ -78,8 +121,6 @@ func main() {
 		return
 	}
 
-	defer jsonFile.Close()
-
 	// Unmarshal the JSON from the file
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 
@@ -88,6 +129,18 @@ func main() {
 
 	if err != nil {
 		fmt.Println("Error reading hosts.json ", err)
+		return
+	}
+
+	jsonFile.Close()
+
+	if addGroup != "" {
+		AddGroup(jsonResults, addGroup, configFile)
+		return
+	}
+
+	if delGroup != "" {
+		DeleteGroup(jsonResults, delGroup, configFile)
 		return
 	}
 
@@ -139,6 +192,11 @@ func main() {
 				}
 			}
 		}
+	}
+
+	if len(deviceNames) == 0 {
+		fmt.Println("Error: No Hosts found in group " + selectGroup)
+		return
 	}
 
 	// Bring up the menu for the user to select the device to connect to.
