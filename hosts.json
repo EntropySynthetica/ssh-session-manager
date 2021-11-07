@@ -1,35 +1,29 @@
 {
-  "hosts": {
-
-    "default": [
-      {
-        "name": "RaspberryPi",
-        "hostname": "192.168.1.1",
-        "user": "erica"
-      },
-      {
-        "name": "debian",
-        "hostname": "192.168.1.2",
-        "user": "erica"
-      }
-    ],
-
-    "kubernetes": [
-      {
-        "name": "KubeNode01",
-        "hostname": "192.168.1.11",
-        "user": "erica"
-      },
-      {
-        "name": "KubeNode02",
-        "hostname": "192.168.1.12",
-        "user": "erica"
-      },
-      {
-        "name": "KubeNode03",
-        "hostname": "192.168.1.13",
-        "user": "erica"
-      }
-    ]
-  }
+  "groups": [
+    {
+      "groupname": "Default",
+      "hosts": [
+        {
+          "name": "localhost",
+          "hostname": "127.0.0.1",
+          "user": "Username"
+        },
+        {
+          "name": "Router",
+          "hostname": "192.168.0.254",
+          "user": "admin"
+        }
+      ]
+    },
+    {
+      "groupname": "Workstations",
+      "hosts": [
+        {
+          "name": "Linux1",
+          "hostname": "192.168.0.1",
+          "user": "admin"
+        }
+      ]
+    }
+  ]
 }
