@@ -9,7 +9,6 @@ import (
 	"os/exec"
 
 	"github.com/AlecAivazis/survey/v2"
-	"github.com/mitchellh/mapstructure"
 )
 
 type Host struct {
@@ -84,7 +83,7 @@ func main() {
 	// Unmarshal the JSON from the file
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 
-	var jsonResults map[string]interface{}
+	var jsonResults Hostfile
 	err = json.Unmarshal(byteValue, &jsonResults)
 
 	if err != nil {
@@ -99,16 +98,16 @@ func main() {
 	groups := []string{}
 
 	// Itterate thru the JSON and add host group names to an array.
-	groups = append(groups, "All")
+	for _, group := range jsonResults.Groups {
+		groups = append(groups, group.Groupname)
+	}
 
-	if jsonResults["hosts"] == nil {
+	if groups == nil {
 		fmt.Println("Error, no host groups found in hosts.json")
 		return
 	}
 
-	for key := range jsonResults["hosts"].(map[string]interface{}) {
-		groups = append(groups, key)
-	}
+	groups = append(groups, "All")
 
 	// Bring up the menu for the user to select the group to filter to.
 	var selectGroup string
@@ -119,24 +118,25 @@ func main() {
 	survey.AskOne(groupPrompt, &selectGroup, survey.WithPageSize(10))
 
 	// Itterate thru the JSON data and store a list of devices, hostsnames and users to arrays
-	for key, group := range jsonResults["hosts"].(map[string]interface{}) {
-		// If the group is All then we want to match on every pass.
-		if selectGroup == "All" {
-			for _, hosts := range group.([]interface{}) {
-				var host Host
-				mapstructure.Decode(hosts, &host)
+
+	if selectGroup == "All" {
+		// If the All group was selected we want to add every host
+		for _, hosts := range jsonResults.Groups {
+			for _, host := range hosts.Hosts {
 				deviceNames = append(deviceNames, host.Name)
 				hostNames = append(hostNames, host.Hostname)
 				users = append(users, host.User)
 			}
-			// Otherwise only add hosts from the selected group.
-		} else if selectGroup == key {
-			for _, hosts := range group.([]interface{}) {
-				var host Host
-				mapstructure.Decode(hosts, &host)
-				deviceNames = append(deviceNames, host.Name)
-				hostNames = append(hostNames, host.Hostname)
-				users = append(users, host.User)
+		}
+	} else {
+		// Otherwise just add the hosts for the group selected
+		for i, group := range jsonResults.Groups {
+			if group.Groupname == selectGroup {
+				for _, host := range jsonResults.Groups[i].Hosts {
+					deviceNames = append(deviceNames, host.Name)
+					hostNames = append(hostNames, host.Hostname)
+					users = append(users, host.User)
+				}
 			}
 		}
 	}

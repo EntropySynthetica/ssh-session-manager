@@ -2,10 +2,7 @@ module ssh-session-manager
 
 go 1.17
 
-require (
-	github.com/AlecAivazis/survey/v2 v2.3.2
-	github.com/mitchellh/mapstructure v1.4.2
-)
+require github.com/AlecAivazis/survey/v2 v2.3.2
 
 require (
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
