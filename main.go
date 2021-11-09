@@ -130,7 +130,6 @@ func AddHost(jsonResults Hostfile, groups []string, configFile string) {
 	survey.AskOne(prompt, &confirm)
 
 	if confirm == true {
-		fmt.Println("add hosts")
 		for i, group := range jsonResults.Groups {
 			if group.Groupname == selectGroup {
 				jsonResults.Groups[i].Hosts = append(jsonResults.Groups[i].Hosts, newHost)
