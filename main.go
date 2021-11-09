@@ -94,6 +94,54 @@ func DeleteGroup(jsonResults Hostfile, delGroup string, configFile string) {
 	return
 }
 
+func AddHost(jsonResults Hostfile, groups []string, configFile string) {
+	fmt.Println("Adding a host")
+
+	var selectGroup string
+
+	groupPrompt := &survey.Select{
+		Message: "Select a Device Group:",
+		Options: groups,
+	}
+	survey.AskOne(groupPrompt, &selectGroup, survey.WithPageSize(10))
+
+	var newHost Host
+
+	fmt.Println("Enter the details for the new host...")
+	fmt.Println("\nEnter Name: ")
+	fmt.Scanln(&newHost.Name)
+
+	fmt.Println("\nEnter Hostname as an IP or FQDN:")
+	fmt.Scanln(&newHost.Hostname)
+
+	fmt.Println("\nEnter username to log into host with:")
+	fmt.Scanln(&newHost.User)
+
+	fmt.Println("\nYou have entered,")
+	fmt.Println("Name: " + newHost.Name)
+	fmt.Println("Hostname: " + newHost.Hostname)
+	fmt.Println("Username: " + newHost.User)
+	fmt.Println("Device Group: " + selectGroup)
+
+	confirm := false
+	prompt := &survey.Confirm{
+		Message: "Is this correct?",
+	}
+	survey.AskOne(prompt, &confirm)
+
+	if confirm == true {
+		fmt.Println("add hosts")
+		for i, group := range jsonResults.Groups {
+			if group.Groupname == selectGroup {
+				jsonResults.Groups[i].Hosts = append(jsonResults.Groups[i].Hosts, newHost)
+			}
+		}
+		file, _ := json.MarshalIndent(jsonResults, "", " ")
+		_ = ioutil.WriteFile(configFile, file, 0644)
+	}
+	return
+}
+
 func main() {
 	homedir, _ := os.UserHomeDir()
 	var configFile string
@@ -102,6 +150,7 @@ func main() {
 
 	// Parse Command Line Flags
 	newFile := flag.Bool("new", false, "Create a new hosts file")
+	addHost := flag.Bool("addhost", false, "Add a new Host to a group")
 	flag.StringVar(&addGroup, "addgroup", "", "Add a new Group to the hosts file")
 	flag.StringVar(&delGroup, "delgroup", "", "Delete a Group from the host file")
 	flag.StringVar(&configFile, "c", homedir+"/.config/ssm/hosts.json", "specify path of config file")
@@ -162,6 +211,13 @@ func main() {
 		return
 	}
 
+	// User wants to add a host
+	if *addHost {
+		AddHost(jsonResults, groups, configFile)
+		return
+	}
+
+	// Adding the all option to Groups
 	groups = append(groups, "All")
 
 	// Bring up the menu for the user to select the group to filter to.
