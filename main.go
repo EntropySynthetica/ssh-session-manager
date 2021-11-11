@@ -141,6 +141,68 @@ func AddHost(jsonResults Hostfile, groups []string, configFile string) {
 	return
 }
 
+func DelHost(jsonResults Hostfile, groups []string, configFile string) {
+	fmt.Println("Deleting a Host")
+
+	// Bring up the menu for the user to select the group to filter to.
+	var selectGroup string
+	groupPrompt := &survey.Select{
+		Message: "Select a Device Group:",
+		Options: groups,
+	}
+	survey.AskOne(groupPrompt, &selectGroup, survey.WithPageSize(10))
+
+	deviceNames := []string{}
+	var groupInt int
+
+	for i, group := range jsonResults.Groups {
+		if group.Groupname == selectGroup {
+			groupInt = i
+			for _, host := range jsonResults.Groups[i].Hosts {
+				deviceNames = append(deviceNames, host.Name)
+			}
+		}
+	}
+
+	if len(deviceNames) == 0 {
+		fmt.Println("Error: No Hosts found in group " + selectGroup)
+		return
+	}
+
+	var selectDevice string
+	prompt := &survey.Select{
+		Message: "Select a device to connect to:",
+		Options: deviceNames,
+	}
+	survey.AskOne(prompt, &selectDevice, survey.WithPageSize(10))
+
+	var newGroup Groups
+
+	for _, host := range jsonResults.Groups[groupInt].Hosts {
+		newGroup.Groupname = jsonResults.Groups[groupInt].Groupname
+		if host.Name != selectDevice {
+			newGroup.Hosts = append(newGroup.Hosts, host)
+		}
+	}
+
+	jsonResults.Groups[groupInt] = newGroup
+
+	confirm := false
+	delPrompt := &survey.Confirm{
+		Message: "Are you sure you want to delete device " + selectDevice,
+	}
+	survey.AskOne(delPrompt, &confirm)
+
+	if confirm == true {
+		file, _ := json.MarshalIndent(jsonResults, "", " ")
+		_ = ioutil.WriteFile(configFile, file, 0644)
+
+		fmt.Println("Device "+selectDevice, " has been deleted from group "+jsonResults.Groups[groupInt].Groupname)
+	}
+
+	return
+}
+
 func main() {
 	homedir, _ := os.UserHomeDir()
 	var configFile string
@@ -150,6 +212,7 @@ func main() {
 	// Parse Command Line Flags
 	newFile := flag.Bool("new", false, "Create a new hosts file")
 	addHost := flag.Bool("addhost", false, "Add a new Host to a group")
+	delHost := flag.Bool("delhost", false, "Delete a Host")
 	flag.StringVar(&addGroup, "addgroup", "", "Add a new Group to the hosts file")
 	flag.StringVar(&delGroup, "delgroup", "", "Delete a Group from the host file")
 	flag.StringVar(&configFile, "c", homedir+"/.config/ssm/hosts.json", "specify path of config file")
@@ -213,6 +276,12 @@ func main() {
 	// User wants to add a host
 	if *addHost {
 		AddHost(jsonResults, groups, configFile)
+		return
+	}
+
+	// User wants to delete a host
+	if *delHost {
+		DelHost(jsonResults, groups, configFile)
 		return
 	}
 
