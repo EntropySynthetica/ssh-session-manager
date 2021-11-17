@@ -7,9 +7,9 @@ A simple CLI app that lets you select which host from a list of hosts that you w
 
 Change to your tmp directory with `cd /tmp`
 
-Download ssm with `curl -OL https://github.com/EntropySynthetica/ssh-session-manager/releases/download/v1.0.0/ssm-v1.0.0-linux-amd64.tar.gz`
+Download ssm with `curl -OL https://github.com/EntropySynthetica/ssh-session-manager/releases/download/v1.0.0/ssm-v1.1.0-linux-amd64.tar.gz`
 
-Unzip ssm with `tar -xvzf ssm-v1.0.0-linux-amd64.tar.gz`
+Unzip ssm with `tar -xvzf ssm-v1.1.0-linux-amd64.tar.gz`
 
 Add execute perms with `chmod +x ./ssm`
 
@@ -42,10 +42,10 @@ Note, ssm does not handle password storage. You either need to enter a password 
 
 `-delhost` You will be asked to select a group and then the host to remove.  
 
+`-version` Show version.
+
 ## Todo
 
-* Add a show version flag
-* Add a ARM Linux Build
 * Add a Mac Build
 * Add a session logging option
 
