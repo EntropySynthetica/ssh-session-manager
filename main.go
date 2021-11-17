@@ -11,6 +11,8 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 )
 
+const Version = "1.1.0"
+
 type Host struct {
 	Name     string `json:"name"`
 	Hostname string `json:"hostname"`
@@ -213,10 +215,17 @@ func main() {
 	newFile := flag.Bool("new", false, "Create a new hosts file")
 	addHost := flag.Bool("addhost", false, "Add a new Host to a group")
 	delHost := flag.Bool("delhost", false, "Delete a Host")
+	showVer := flag.Bool("v", false, "Show Version")
 	flag.StringVar(&addGroup, "addgroup", "", "Add a new Group to the hosts file")
 	flag.StringVar(&delGroup, "delgroup", "", "Delete a Group from the host file")
 	flag.StringVar(&configFile, "c", homedir+"/.config/ssm/hosts.json", "specify path of config file")
 	flag.Parse()
+
+	// Print Version of app
+	if *showVer {
+		fmt.Println("SSH Session Manager Version: " + Version)
+		return
+	}
 
 	// If the new file flag is selected create a new hosts file.
 	if *newFile {
