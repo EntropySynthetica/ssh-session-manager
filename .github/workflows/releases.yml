@@ -18,3 +18,17 @@ jobs:
         goarch: amd64
         goversion: "https://golang.org/dl/go1.17.2.linux-amd64.tar.gz"
         binary_name: ssm
+
+  release-linux-arm:
+    name: release linux/arm
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: wangyoucao577/go-release-action@v1.20
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: linux
+        goarch: arm
+        goversion: "https://golang.org/dl/go1.17.2.linux-amd64.tar.gz"
+        binary_name: ssm
