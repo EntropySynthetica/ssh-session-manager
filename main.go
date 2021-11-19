@@ -118,17 +118,32 @@ func AddHost(jsonResults Hostfile, groups []string, configFile string) {
 	// Get the Name of the new host.
 	fmt.Println("\nEnter Name: ")
 	name, _ := in.ReadString('\n')
-	newHost.Name = strings.TrimSuffix(name, "\n")
+	if name == "\n" {
+		fmt.Println("Error: Name can not be blank")
+		return
+	} else {
+		newHost.Name = strings.TrimSuffix(name, "\n")
+	}
 
 	// Get the Hostname of the new host.
 	fmt.Println("\nEnter Hostname as an IP or FQDN:")
 	hostname, _ := in.ReadString('\n')
-	newHost.Hostname = strings.TrimSuffix(hostname, "\n")
+	if hostname == "\n" {
+		fmt.Println("Error: Hostname can not be blank")
+		return
+	} else {
+		newHost.Hostname = strings.TrimSuffix(hostname, "\n")
+	}
 
 	// Get the Username of the new host.
 	fmt.Println("\nEnter username to log into host with:")
 	user, _ := in.ReadString('\n')
-	newHost.User = strings.TrimSuffix(user, "\n")
+	if user == "\n" {
+		fmt.Println("Error: Username can not be blank")
+		return
+	} else {
+		newHost.User = strings.TrimSuffix(user, "\n")
+	}
 
 	fmt.Println("\nYou have entered,")
 	fmt.Println("Name: " + newHost.Name)
