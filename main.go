@@ -13,7 +13,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 )
 
-const Version = "1.1.0"
+const Version = "1.1.1"
 
 type Host struct {
 	Name     string `json:"name"`
