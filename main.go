@@ -59,8 +59,25 @@ func NewFile(configFile string) {
 	jsonFile.Groups = append(jsonFile.Groups, group1)
 	jsonFile.Groups = append(jsonFile.Groups, group2)
 
-	file, _ := json.MarshalIndent(jsonFile, "", " ")
-	_ = ioutil.WriteFile(configFile, file, 0644)
+	if _, err := os.Stat(configFile); err == nil {
+		fmt.Println(configFile + " already exists!")
+		confirm := false
+		prompt := &survey.Confirm{
+			Message: "Do you want to overwrite?",
+		}
+		survey.AskOne(prompt, &confirm)
+
+		if confirm == true {
+			file, _ := json.MarshalIndent(jsonFile, "", " ")
+			_ = ioutil.WriteFile(configFile, file, 0644)
+			fmt.Println("New hosts file created at " + configFile)
+		}
+
+	} else {
+		file, _ := json.MarshalIndent(jsonFile, "", " ")
+		_ = ioutil.WriteFile(configFile, file, 0644)
+		fmt.Println("New hosts file created at " + configFile)
+	}
 }
 
 func AddGroup(jsonResults Hostfile, addGroup string, configFile string) {
