@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 )
@@ -109,15 +111,24 @@ func AddHost(jsonResults Hostfile, groups []string, configFile string) {
 
 	var newHost Host
 
+	in := bufio.NewReader(os.Stdin)
+
 	fmt.Println("Enter the details for the new host...")
+
+	// Get the Name of the new host.
 	fmt.Println("\nEnter Name: ")
-	fmt.Scanln(&newHost.Name)
+	name, _ := in.ReadString('\n')
+	newHost.Name = strings.TrimSuffix(name, "\n")
 
+	// Get the Hostname of the new host.
 	fmt.Println("\nEnter Hostname as an IP or FQDN:")
-	fmt.Scanln(&newHost.Hostname)
+	hostname, _ := in.ReadString('\n')
+	newHost.Hostname = strings.TrimSuffix(hostname, "\n")
 
+	// Get the Username of the new host.
 	fmt.Println("\nEnter username to log into host with:")
-	fmt.Scanln(&newHost.User)
+	user, _ := in.ReadString('\n')
+	newHost.User = strings.TrimSuffix(user, "\n")
 
 	fmt.Println("\nYou have entered,")
 	fmt.Println("Name: " + newHost.Name)
