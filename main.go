@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -74,6 +75,16 @@ func NewFile(configFile string) {
 		}
 
 	} else {
+		// Check if config directory exists, and make it if it does not.
+		homedir, _ := os.UserHomeDir()
+		_, err := os.Stat(homedir + "/.config/ssm")
+		if os.IsNotExist(err) {
+			err := os.Mkdir(homedir+"/.config/ssm", 0755)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+
 		file, _ := json.MarshalIndent(jsonFile, "", " ")
 		_ = ioutil.WriteFile(configFile, file, 0644)
 		fmt.Println("New hosts file created at " + configFile)
