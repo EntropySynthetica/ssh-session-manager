@@ -7,7 +7,7 @@ A simple CLI app that lets you select which host from a list of hosts that you w
 
 Change to your tmp directory with `cd /tmp`
 
-Download ssm with ```curl -OL https://github.com/EntropySynthetica/ssh-session-manager/releases/download/v1.1.1/ssm-v1.1.1-linux-amd64.tar.gz```
+Download ssm with ```curl -OL https://github.com/EntropySynthetica/ssh-session-manager/releases/download/v1.1.2/ssm-v1.1.2-linux-amd64.tar.gz```
 
 Unzip ssm with `tar -xvzf ssm-v1.1.1-linux-amd64.tar.gz`
 
@@ -52,4 +52,4 @@ Note, ssm does not handle password storage. You either need to enter a password 
 
 
 ### Known Bugs to be fixed,
-* The if the ~/.config/ssm folder doesn't exist and you run the -new command the program will act like it works, but do nothing. 
+* None at this time
