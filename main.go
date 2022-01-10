@@ -14,7 +14,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 )
 
-const Version = "1.1.2"
+const Version = "1.1.3"
 
 type Host struct {
 	Name     string `json:"name"`
@@ -309,13 +309,13 @@ func main() {
 
 	jsonFile.Close()
 
-	// Runs if addgroup flag has something in it.
+	// Runs if addGroup flag has something in it.
 	if addGroup != "" {
 		AddGroup(jsonResults, addGroup, configFile)
 		return
 	}
 
-	// Runs if deletegroup flag has somethign in it.
+	// Runs if delGroup flag has something in it.
 	if delGroup != "" {
 		DeleteGroup(jsonResults, delGroup, configFile)
 		return
