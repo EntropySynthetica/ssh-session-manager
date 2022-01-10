@@ -292,6 +292,7 @@ func main() {
 
 	if err != nil {
 		fmt.Println(err)
+		fmt.Println("You can create an example hosts file with the -new flag")
 		return
 	}
 
@@ -326,7 +327,7 @@ func main() {
 	users := []string{}
 	groups := []string{}
 
-	// Itterate thru the JSON and add host group names to an array.
+	// Iterate through the JSON and add host group names to an array.
 	for _, group := range jsonResults.Groups {
 		groups = append(groups, group.Groupname)
 	}
