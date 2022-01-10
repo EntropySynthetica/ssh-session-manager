@@ -1,1 +1,4 @@
 bin/
+/ssh-session-manager
+.idea/*
+

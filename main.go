@@ -14,7 +14,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 )
 
-const Version = "1.1.2"
+const Version = "1.1.3"
 
 type Host struct {
 	Name     string `json:"name"`
@@ -292,6 +292,7 @@ func main() {
 
 	if err != nil {
 		fmt.Println(err)
+		fmt.Println("You can create an example hosts file with the -new flag")
 		return
 	}
 
@@ -308,13 +309,13 @@ func main() {
 
 	jsonFile.Close()
 
-	// Runs if addgroup flag has something in it.
+	// Runs if addGroup flag has something in it.
 	if addGroup != "" {
 		AddGroup(jsonResults, addGroup, configFile)
 		return
 	}
 
-	// Runs if deletegroup flag has somethign in it.
+	// Runs if delGroup flag has something in it.
 	if delGroup != "" {
 		DeleteGroup(jsonResults, delGroup, configFile)
 		return
@@ -326,7 +327,7 @@ func main() {
 	users := []string{}
 	groups := []string{}
 
-	// Itterate thru the JSON and add host group names to an array.
+	// Iterate through the JSON and add host group names to an array.
 	for _, group := range jsonResults.Groups {
 		groups = append(groups, group.Groupname)
 	}
@@ -359,7 +360,7 @@ func main() {
 	}
 	survey.AskOne(groupPrompt, &selectGroup, survey.WithPageSize(10))
 
-	// Itterate thru the JSON data and store a list of devices, hostsnames and users to arrays
+	// Iterate through the JSON data and store a list of devices, hostnames and users to arrays
 
 	if selectGroup == "All" {
 		// If the All group was selected we want to add every host
@@ -371,7 +372,7 @@ func main() {
 			}
 		}
 	} else {
-		// Otherwise just add the hosts for the group selected
+		// Otherwise, just add the hosts for the group selected
 		for i, group := range jsonResults.Groups {
 			if group.Groupname == selectGroup {
 				for _, host := range jsonResults.Groups[i].Hosts {
