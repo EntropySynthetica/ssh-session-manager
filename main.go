@@ -360,7 +360,7 @@ func main() {
 	}
 	survey.AskOne(groupPrompt, &selectGroup, survey.WithPageSize(10))
 
-	// Itterate thru the JSON data and store a list of devices, hostsnames and users to arrays
+	// Iterate through the JSON data and store a list of devices, hostnames and users to arrays
 
 	if selectGroup == "All" {
 		// If the All group was selected we want to add every host
@@ -372,7 +372,7 @@ func main() {
 			}
 		}
 	} else {
-		// Otherwise just add the hosts for the group selected
+		// Otherwise, just add the hosts for the group selected
 		for i, group := range jsonResults.Groups {
 			if group.Groupname == selectGroup {
 				for _, host := range jsonResults.Groups[i].Hosts {
